@@ -1,10 +1,10 @@
 # nojambot
 
-## Twitter [@nojambot](https://twitter.com/nojamrobot)
+## Twitter [@nojamrobot](https://twitter.com/nojamrobot)
 
-twitter의 @nojambot이 사용하는 봇의 코드입니다.
+twitter의 @nojamrobot이 사용하는 봇의 코드입니다.
 
-@nojambot은 매 1시간 간격으로 랜덤한 노잼 개그를 트위터에 포스팅하고 있습니다.
+@nojamrobot은 매 1시간 간격으로 랜덤한 노잼 개그를 트위터에 포스팅하고 있습니다.
 
 새로운 개그를 위해서는 여러분들의 도움이 절실합니다.
 
