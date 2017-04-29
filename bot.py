@@ -9,11 +9,13 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
 api = tweepy.API(auth)
 
+# Loading no-jam-gag
 f = open('no-jam-gag.txt', 'r')
 items = f.readlines()
 f.close()
 
 while True:
+    # Getting random no-jam-gag
     item = random.choice(items)
     try:
         api.update_status(item)
