@@ -1,63 +1,70 @@
-import sys
 import json
 import random
+import logging
 import asyncio
 import websockets
 
 from slacker import Slacker
 
-from conf import SLK_TOKEN, SLK_CMD_PREFIX
+from conf import TOKEN, BOT_NAME
 
 
-slack = Slacker(SLK_TOKEN)
-
-response = slack.rtm.start()
-sock_endpoint = response.body['url']
+logger = logging.getLogger('nojam_slack')
 
 
-# Send message to slcak channel
-def extract_message(channel, msg):
-    cmd = msg.split(' ')
-    if SLK_CMD_PREFIX != cmd[0]:
-        return 'not command'
+class Slack:
+    def __init__(self):
+        # Init slack bot config
+        self.bot_name = BOT_NAME
+        self.slack = Slacker(TOKEN)
+        self.response = self.slack.rtm.start()
+        self.endpoint = self.response.body['url']
 
-    if SLK_CMD_PREFIX == cmd[0] and 1 < len(cmd):
-        if cmd[1] == 'help':
-            slack.chat.post_message(channel,
-                '> <@nojambot> 유우머',
-                as_user=True
-            )
+        # Load nojam gag
+        with open('no-jam-gag.txt', 'r') as nojam:
+            self.items = nojam.readlines()
 
-        elif cmd[1] == '유우머':
-            # Loading no-jam-gag
-            f = open('no-jam-gag.txt', 'r')
-            items = f.readlines()
-            f.close()
+        # Init default msg
+        self.msg = None
 
-            item = random.choice(items)
+    def extract_message(self, channel, cmd):
+        # Extract command
+        cmd = cmd.split(' ')
 
-            slack.chat.post_message(channel, item, as_user=True)
-        else:
-            slack.chat.post_message(chaennl, '????', as_user=True)
-    else:
-        slack.chat.post_message(channel, '> <@nojambot> help', as_user=True)
+        # Send messages to slack channel
+        if self.bot_name == cmd[0] and 1 < len(cmd):
+            if cmd[1] == 'help':
+                self.msg = '> <@nojambot> 유우머'
 
+            elif cmd[1] == '유우머':
+                self.msg = random.choice(self.items)
 
-# Get message from slack channel
-async def execute_bot():
-    ws = await websockets.connect(sock_endpoint)
-    while True:
-        msg = await ws.recv()
-        ext_msg = json.loads(msg)
+            else:
+                # Cannot understand
+                self.msg = '????'
 
-        try:
-            if ext_msg['type'] == 'message':
-                extract_message(ext_msg['channel'], ext_msg['text'])
-        except:
-            print('error')
+        elif self.bot_name == cmd[0]:
+            self.msg = '> <@nojambot> help'
 
+    def send_message(self, channel):
+        if self.msg:
+            self.slack.chat.post_message(channel, self.msg, as_user=True)
+            logger.info('Sended message: {}'.format(self.msg))
+        self.msg = None
 
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
-asyncio.get_event_loop().run_until_complete(execute_bot())
-asyncio.get_event_loop().run_forever()
+    async def execute_bot(self):
+        ws = await websockets.connect(self.endpoint)
+        while True:
+            cmd = await ws.recv()
+            json_cmd = json.loads(cmd)
+
+            if json_cmd['type'] == 'message':
+                self.extract_message(
+                    json_cmd['channel'],
+                    json_cmd['text']
+                )
+
+            try:
+                self.send_message(json_cmd['channel'])
+            except Exception as e:
+                logger.error(e)

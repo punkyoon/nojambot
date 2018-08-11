@@ -1,30 +1,53 @@
-import sys
 import time
 import random
+import logging
+
 import tweepy
 
 from conf import (
-    TWT_CONSUMER_KEY,
-    TWT_CONSUMTER_SECRET,
-    TWT_ACCESS_TOKEN,
-    TWT_ACCESS_SECRET
+    CONSUMER_KEY,
+    CONSUMER_SECRET,
+    ACCESS_TOKEN,
+    ACCESS_SECRET,
+    MINUTES
 )
 
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-api = tweepy.API(auth)
 
-# Loading no-jam-gag
-f = open('no-jam-gag.txt', 'r')
-items = f.readlines()
-f.close()
+logger = logging.getLogger('nojam_twitter')
 
-while True:
-    # Getting random no-jam-gag
-    item = random.choice(items)
-    try:
-        api.update_status(item)
-    except tweepy.error.TweepError:
-        continue
-    print('Uploaded message : ' + item)
-    time.sleep(MINUTES*60)  # Tweet every 'MINUTES' minutes.
+
+class Twitter:
+    def __init__(self):
+        # Init twitter bot config
+        self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+        self.auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
+        self.api = tweepy.API(self.auth)
+
+        # Load nojam gag
+        with open('no-jam-gag.txt', 'r') as nojam:
+            self.items = nojam.readlines()
+
+        # Init default msg
+        self.msg = ''
+
+        self.logger = logging.getLogger('nojam_twitter')
+        self.logger.setLevel(logging.INFO)
+
+
+    def extract_message(self):
+        self.msg = random.choice(self.items)
+
+    def send_message(self):
+        try:
+            self.api.update_status(self.msg)
+        except Exception as e:
+            self.logger.error(e)
+            return
+
+        self.logger.info('Uploaded message: {}'.format(self.msg))
+
+    def execute_bot(self):
+        while True:
+            self.extract_message()
+            self.send_message()
+            time.sleep(MINUTES * 60)
