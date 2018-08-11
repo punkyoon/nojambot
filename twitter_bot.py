@@ -3,7 +3,12 @@ import time
 import random
 import tweepy
 
-from conf import *
+from conf import (
+    TWT_CONSUMER_KEY,
+    TWT_CONSUMTER_SECRET,
+    TWT_ACCESS_TOKEN,
+    TWT_ACCESS_SECRET
+)
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
