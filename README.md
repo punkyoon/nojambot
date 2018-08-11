@@ -1,5 +1,7 @@
 # nojambot
 
+![nojambot_in_slack](https://user-images.githubusercontent.com/11442383/43994206-1e458d3a-9dd4-11e8-8a0b-b4bd12562539.png)
+
 > 이제는 nojambot을 slack과 twitter에서 만나볼 수 있습니다!
 
 ## 소개
