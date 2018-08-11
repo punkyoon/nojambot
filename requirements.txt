@@ -1,1 +1,4 @@
 tweepy
+requests
+slacker
+websockets
