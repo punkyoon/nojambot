@@ -1,4 +1,3 @@
-import re
 import sys
 import json
 import random
@@ -15,16 +14,21 @@ slack = Slacker(SLK_TOKEN)
 response = slack.rtm.start()
 sock_endpoint = response.body['url']
 
+
 # Send message to slcak channel
 def extract_message(channel, msg):
     cmd = msg.split(' ')
     if SLK_CMD_PREFIX != cmd[0]:
         return 'not command'
 
-    if 1 < len(cmd):
+    if SLK_CMD_PREFIX == cmd[0] and 1 < len(cmd):
         if cmd[1] == 'help':
-            slack.chat.post_message(channel, '@nojambot 유우머', as_user=True)
-        elif bool(re.match('[가-힣]+', cmd[1])):
+            slack.chat.post_message(channel,
+                '> <@nojambot> 유우머',
+                as_user=True
+            )
+
+        elif cmd[1] == '유우머':
             # Loading no-jam-gag
             f = open('no-jam-gag.txt', 'r')
             items = f.readlines()
@@ -36,7 +40,7 @@ def extract_message(channel, msg):
         else:
             slack.chat.post_message(chaennl, '????', as_user=True)
     else:
-        slack.chat.post_message(channel, '@nojambot help', as_user=True)
+        slack.chat.post_message(channel, '> <@nojambot> help', as_user=True)
 
 
 # Get message from slack channel
@@ -48,9 +52,9 @@ async def execute_bot():
 
         try:
             if ext_msg['type'] == 'message':
-                extract_message(ext_mesg['channel'], ext_msg['text'])
+                extract_message(ext_msg['channel'], ext_msg['text'])
         except:
-            pass
+            print('error')
 
 
 loop = asyncio.new_event_loop()
