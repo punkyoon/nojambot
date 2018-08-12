@@ -58,13 +58,13 @@ class Slack:
             cmd = await ws.recv()
             json_cmd = json.loads(cmd)
 
-            if json_cmd['type'] == 'message':
+            if 'type' in json_cmd and json_cmd['type'] == 'message':
                 self.extract_message(
                     json_cmd['channel'],
                     json_cmd['text']
                 )
 
-            try:
-                self.send_message(json_cmd['channel'])
-            except Exception as e:
-                logger.error(e)
+                try:
+                    self.send_message(json_cmd['channel'])
+                except Exception as e:
+                    logger.error(e)
