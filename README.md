@@ -1,4 +1,7 @@
-# nojambot
+# [DEPRECATED] nojambot
+
+> 구글 어시스턴트에게 `헤이 구글, 재밌는 얘기 해줘` 혹은 `Hey Google, tell me a dad joke`를 말해보세요
+> 구글 때문에 더이상 이 프로젝트를 운영하지 않기로 결정했습니다 😢
 
 ![nojambot_in_slack](https://user-images.githubusercontent.com/11442383/43994206-1e458d3a-9dd4-11e8-8a0b-b4bd12562539.png)
 
