@@ -51,4 +51,4 @@ python heart_of_bot.py slack
 
 [MIT license](https://github.com/punkyoon/nojambot/blob/master/LICENSE)
 
-Copyright (c) 2018 punkyoon(Jiyoon Ha)
+Copyright (c) 2021 punkyoon(Jiyoon Ha)
