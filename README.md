@@ -1,6 +1,6 @@
 # [DEPRECATED] nojambot
 
-> 구글 어시스턴트에게 `헤이 구글, 재밌는 얘기 해줘` 혹은 `Hey Google, tell me a dad joke`를 말해보세요
+> 구글 어시스턴트에게 `헤이 구글, 재밌는 얘기해줘` 혹은 `Hey Google, tell me a dad joke`를 말해보세요
 > 
 > 구글 때문에 더이상 이 프로젝트를 운영하지 않기로 결정했습니다 😢
 
